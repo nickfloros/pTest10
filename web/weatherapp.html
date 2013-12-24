@@ -1,0 +1,14 @@
+<polymer-element name="weather-app">
+  <link rel="import" href="linechart.html">
+  <template>
+    <style>
+    </style>
+    <div>
+      <line-chart id="windSpeed" xaxisTitle="Time" yaxisTitle="Speed(knots)"></line-chart>
+      <line-chart id="windDirection" xaxisTitle="Time" yaxisTitle="Bearing(degrees)"></line-chart>
+    </div>
+  </template>
+  
+  <script type="application/dart" src="weatherapp.dart"></script>
+</polymer-element>
+
