@@ -1,4 +1,5 @@
 import 'package:polymer/polymer.dart';
+import 'linechart.dart';
 
 /**
  * A Polymer click counter element.
@@ -7,15 +8,24 @@ import 'package:polymer/polymer.dart';
 class WeatherApp extends PolymerElement {
   
   bool get applyAuthorStyles => true;
-  @published String xaxisTitle;
-  @published String yaxisTitle;
+  LineChart _windSpeedLineChart;
+  LineChart _windDirectionLineChart;
   
   WeatherApp.created() : super.created() {
+    print('WeatherApp.created ${id} ${shadowRoot!=null}');
+    if (shadowRoot!=null) {
+      _windSpeedLineChart =shadowRoot.querySelector('#lineA');
+      _windDirectionLineChart =shadowRoot.querySelector('#lineB');
+    }
   }
 
   void ready() {
-    print(xaxisTitle);
-    print(shadowRoot!=null);    
+    super.ready();
+    print('WeatherApp.ready ${id} ${shadowRoot!=null}');
+    _windSpeedLineChart =shadowRoot.querySelector('#lineA');
+    _windDirectionLineChart =shadowRoot.querySelector('#lineB');
+    _windDirectionLineChart.fromParent();
+    _windSpeedLineChart.fromParent();
   }
 }
 

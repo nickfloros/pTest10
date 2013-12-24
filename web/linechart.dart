@@ -7,14 +7,20 @@ import 'package:polymer/polymer.dart';
 class LineChart extends PolymerElement {
   
   bool get applyAuthorStyles => true;
+  
   @published String xaxisTitle;
   @published String yaxisTitle;
   
   LineChart.created() : super.created() {
+    print('LineChart.created ${id} ${this.getShadowRoot('line-chart')!=null}');
   }
 
   void ready() {
-    print('LineChart ${id} ${this.getShadowRoot('line-chart')!=null}'); 
-    
+    super.ready();
+    print('LineChart.ready ${id} ${this.getShadowRoot('line-chart')!=null}'); 
+  }
+  
+  void fromParent() {
+    print('LineChart.fromParent ${id}');
   }
 }
