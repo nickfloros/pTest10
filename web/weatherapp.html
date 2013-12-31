@@ -1,14 +1,15 @@
+<link rel="import" href="packages/pTest10/navtabs.html">
+<link rel="import" href="linechart.html">
 <polymer-element name="weather-app">
-  <link rel="import" href="linechart.html">
   <template>
     <style>
     </style>
     <div>
-      <line-chart id="lineA" xaxisTitle="Time" yaxisTitle="Speed(knots)"></line-chart>
-      <line-chart id="lineB" xaxisTitle="Time" yaxisTitle="Bearing(degrees)"></line-chart>
+      <nav-tabs id="navTab"></nav-tabs>
+      <line-chart id="speedChart" chartTitle="Wind speed" xaxisTitle="Time" yaxisTitle="Speed (knots)"></line-chart>
+      <line-chart id="directionChart" chartTitle="Wind direction" xaxisTitle="Time" yaxisTitle="Direction (degrees)" minValue="0" maxValue="360"></line-chart>
     </div>
   </template>
-  
   <script type="application/dart" src="weatherapp.dart"></script>
 </polymer-element>
 
