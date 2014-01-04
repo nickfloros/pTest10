@@ -12,7 +12,7 @@ The app demonstrates use of
 - Polymer components
 - Google Maps
 - Google Charts
-- Bootstract style
-- Integration with Google App Enginee
+- Use of bootstrap css
+- Integration with Google AppEngine Endpoints (http://github.com/nickfloros/testAppV6)
 
 PS : Need a better name
