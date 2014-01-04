@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:async';
 import 'package:polymer/polymer.dart';
 import 'windchart.dart';
 import 'gmap.dart';
@@ -86,13 +87,13 @@ class WeatherApp extends PolymerElement {
   void _showMap(CustomEvent data) {
     if (!_contentDiv.children.contains(_gMap)) {
       _contentDiv.children.clear();
-      _contentDiv.children.add(_gMap);
+      _contentDiv.children.add(_gMap);     
+      _gMap.show(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
       
     }
   }
-  
+
   void _processResponse(var resp) {
-//   this.fire('drawCharts', detail: resp);
    _wchart.draw(resp);
   }
   

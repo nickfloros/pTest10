@@ -48,4 +48,9 @@ class GMap extends PolymerElement {
     _mapCanvas.style.width='${width}px';
     _mapCanvas.style.height='${height}px';
   }
+  
+  void show(int width,int height) {
+    resize(width,height);
+    new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
+  }
 }
