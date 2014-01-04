@@ -15,15 +15,14 @@ class NavTabs extends PolymerElement {
   List options = toObservable([]);
 
   // event to generate when an option is selected ..
-  final String selectionEventName='navTabEvent';
+  static final String selectionEventName='navTabEvent';
+  
+  static final String mapSelected = 'mapSelected';
   
   // remembers which item is curently selected
   var _currentSelected; 
   
   NavTabs.created() : super.created() {
-    if (shadowRoot!=null) {
-      print(selectionEventName);
-    }
   }
 
   void onSelected(Event e, var detail, Element target) {
@@ -32,6 +31,12 @@ class NavTabs extends PolymerElement {
       _toggle(target);
       this.fire(selectionEventName,detail:int.parse(idStr));
     }
+    
+  }
+  
+  void onMapSelected(Event e, var details, Element target) {
+    _toggle(target);
+    this.fire(mapSelected);
   }
   
   void _toggle(var target) {
@@ -46,5 +51,13 @@ class NavTabs extends PolymerElement {
     options.addAll(sites);
   }
   
+  void enteredView() {
+    super.enteredView();
+    print('navTab enteredView');
+  }
+  
+  int get height {
+    return 44;
+  }
 }
 

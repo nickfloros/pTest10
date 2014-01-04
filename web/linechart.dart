@@ -58,6 +58,7 @@ class LineChart extends PolymerElement {
     return c.future;
   }
 
+  
   void _intChart() {
     
     var options={
@@ -65,6 +66,11 @@ class LineChart extends PolymerElement {
       'hAxis': {'title': xaxisTitle},
       'vAxis': {'title': yaxisTitle}
     };
+    if (minValue!=null) {
+      var f1 = options['vAxis'];
+      f1.addAll({'viewWindowMode':'explicit','viewWindow':{'min': int.parse(minValue), 'max': int.parse(maxValue)}});
+    }
+    
     // where we will display the chart
     _chartDiv = shadowRoot.querySelector('#chart');
     // google visualization library ref

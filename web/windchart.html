@@ -1,0 +1,10 @@
+<link rel="import" href="linechart.html">
+<polymer-element name="wind-chart">
+  <template>
+    <style>
+    </style>
+      <line-chart id="speedChart" chartTitle="Wind speed" xaxisTitle="Time" yaxisTitle="Speed (knots)"></line-chart>
+      <line-chart id="directionChart" chartTitle="Wind direction" xaxisTitle="Time" yaxisTitle="Direction (degrees)" minValue="0" maxValue="360"></line-chart>
+  </template>
+  <script type="application/dart" src="windchart.dart"></script>
+</polymer-element>

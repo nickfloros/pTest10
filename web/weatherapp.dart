@@ -1,8 +1,10 @@
 import 'dart:html';
 import 'package:polymer/polymer.dart';
-import 'linechart.dart';
+import 'windchart.dart';
+import 'gmap.dart';
 import 'package:pTest10/navtabs.dart';
 import 'package:pTest10/mfordgae.dart';
+import 'footertab.dart';
 
 /**
  * A Polymer click counter element.
@@ -13,29 +15,50 @@ class WeatherApp extends PolymerElement {
   bool get applyAuthorStyles => true;
   
   NavTabs _navTab;
-  LineChart _windSpeedLineChart;
-  LineChart _windDirectionLineChart;
-
+  var _wchart;
+  var _gMap;
+  FooterTab _footerTab;
+  int _workAreaHeightOffset=0;
+   
+  Element _contentDiv;
+  
   Mford_Gae_Services _svc;
   
   WeatherApp.created() : super.created() {
     print('WeatherApp.created ${id} ${shadowRoot!=null}');
 
     if (shadowRoot!=null) { // there is a strange behaviour if element i
-
+      
       // bind to navTabs component
       _navTab = shadowRoot.querySelector('#navTab');
-      window.on[_navTab.selectionEventName].listen(_showSite);
+      _footerTab = shadowRoot.querySelector('#footerTab');
       
-      _windSpeedLineChart =shadowRoot.querySelector('#speedChart');
-      _windDirectionLineChart =shadowRoot.querySelector('#directionChart');
+      window.on[NavTabs.selectionEventName].listen(_showSite);
+
+      window.on[NavTabs.mapSelected].listen(_showMap);
+      
+      _wchart = new Element.tag('wind-chart');
+      
+      _gMap = new Element.tag('g-map');
+      _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+      
+      _contentDiv = shadowRoot.querySelector('#content')
+          ..children.add(_gMap);
       
       _svc=new Mford_Gae_Services()
            ..readSites().then( (resp)=>_renderSites(resp));
-      
+        
+      window.onResize.listen( (event) {
+        print('width : ${window.innerWidth} height: ${window.innerHeight}');
+        event.preventDefault(); // stop the event from propagating ..
+        if (_showingMap) {
+          _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+        }
+      });
     }
   }
 
+  
   void _renderSites(List<Site> sites){
     _navTab.options.clear();
     for (var item in sites) {
@@ -43,34 +66,36 @@ class WeatherApp extends PolymerElement {
     }
   }
   
+  
   void _showSite(CustomEvent data) {
+    if (_contentDiv.children.contains(_gMap)) {
+      _contentDiv.children.clear();
+      _contentDiv.children.add(_wchart);
+    }
     _svc.readSite(data.detail).then( _processResponse);
+  }
+
+  /*
+   * test to determin if map is on display...
+   */
+  bool get _showingMap {
+    if (_gMap==null) return false;
+    return _contentDiv.children.contains(_gMap);
+  }
+  
+  void _showMap(CustomEvent data) {
+    if (!_contentDiv.children.contains(_gMap)) {
+      _contentDiv.children.clear();
+      _contentDiv.children.add(_gMap);
+      
+    }
   }
   
   void _processResponse(var resp) {
-    // set headers ... 
-    List directionData = new List() 
-      ..add( new List() 
-      ..add('Time')
-      ..add('Min')
-      ..add('Avg')
-      ..add('Max')
-      );
-    
-    List speedData = new List() 
-      ..add( new List() 
-      ..add('Time')
-      ..add('Min')
-      ..add('Avg')
-      ..add('Max')
-      );            
-      
-    for (AnemometerReading item in resp) {
-      directionData.add(item.direction.toList(item.timeStamp));
-      speedData.add(item.speed.toList(item.timeStamp));
-    }
-    _windSpeedLineChart.draw(speedData);
-    _windDirectionLineChart.draw(directionData);
+//   this.fire('drawCharts', detail: resp);
+   _wchart.draw(resp);
   }
+  
+  
 }
 
