@@ -53,4 +53,25 @@ class GMap extends PolymerElement {
     resize(width,height);
     new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
   }
+  var latLngBound;
+  Map _markers = new Map();
+  
+  void addMarker(String key, String desc, num lat, num lng){
+    var point =  new JsObject(_googleMap['LatLng'], [lat,lng]);
+    
+    if (latLngBound==null) {
+      latLngBound = new JsObject(_googleMap['LatLngBounds'],[]);
+    }
+    latLngBound.callMethod('extend',[point]);
+    
+    var markerOptions = new JsObject.jsify({
+      "position":point,
+      "map":_map,
+      "title": desc
+    });
+    var marker = new JsObject(_googleMap['Marker'],[markerOptions]);
+    _markers[key]=marker;   
+    
+    _map.callMethod('fitBounds',[latLngBound]);
+  }
 }

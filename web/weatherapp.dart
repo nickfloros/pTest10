@@ -64,6 +64,7 @@ class WeatherApp extends PolymerElement {
     _navTab.options.clear();
     for (var item in sites) {
       _navTab.options.add(item.stationName);
+      _gMap.addMarker(item.stationCode,item.stationName, item.latitude, item.longitude);
     }
   }
   
