@@ -6,8 +6,10 @@ Live wind speed and direction for few windsurding spots in South of England
 - Lyndhurst
 - Hurst Castle.
 
+Data is courtesy of http://www.r-p-r.co.uk/index.html
+
 The app demonstrates use of 
-- Polyer components
+- Polymer components
 - Google Maps
 - Google Charts
 - Bootstract style
