@@ -12,13 +12,18 @@ class GMap extends PolymerElement {
   /*
    * center of map longtude
    */
-  @published String cLng='-1.5';
+  @published String cLng='-1.2';
 
+  static final String markerSelectedEvent = "markerSelected";
+  
   var _googleMap;
   var mapOptions;
   var _mapCanvas;
   var _map;
-  
+
+  JsObject _latLngBound;
+  Map _markers = new Map();
+
   GMap.created() : super.created() {
     if (shadowRoot!=null) {
       _init();
@@ -53,25 +58,59 @@ class GMap extends PolymerElement {
     resize(width,height);
     new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
   }
-  var latLngBound;
-  Map _markers = new Map();
   
+  /**
+   * add a marker 
+   */
   void addMarker(String key, String desc, num lat, num lng){
     var point =  new JsObject(_googleMap['LatLng'], [lat,lng]);
     
-    if (latLngBound==null) {
-      latLngBound = new JsObject(_googleMap['LatLngBounds'],[]);
+    if (_latLngBound==null) {
+      _latLngBound = new JsObject(_googleMap['LatLngBounds'],[]);
     }
-    latLngBound.callMethod('extend',[point]);
+    _latLngBound.callMethod('extend',[point]);
     
     var markerOptions = new JsObject.jsify({
       "position":point,
       "map":_map,
       "title": desc
     });
-    var marker = new JsObject(_googleMap['Marker'],[markerOptions]);
-    _markers[key]=marker;   
     
-    _map.callMethod('fitBounds',[latLngBound]);
+    _map.callMethod('fitBounds',[_latLngBound]);
+
+    _markers[key] = new JsObject(_googleMap['Marker'],[markerOptions]);
+    _googleMap['event'].callMethod('addListener',
+                                  [_markers[key],'click',
+                                   new MarkerCallback(notify,_markers.length-1).onClick]);
+
+    
+  }
+
+  /*
+   * fire event identifying that an marker was selected
+   */
+  void notify(int markerId){
+    this.fire(GMap.markerSelectedEvent,detail:markerId);
+  }
+  
+}
+
+/**
+ * temp class to hold marker referrence ... this is too convoluted there should be a better way 
+ */
+class MarkerCallback {
+  int ref;
+  var _callBack;
+  MarkerCallback(Function win,int k) {
+    _callBack = win;
+    ref=k;
+  }
+  
+  /*
+   * call back from JS universe
+   */
+  void onClick(var misc) {
+    print('selected ${ref}');
+    _callBack(ref);
   }
 }

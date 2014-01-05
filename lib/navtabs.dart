@@ -28,22 +28,32 @@ class NavTabs extends PolymerElement {
   void onSelected(Event e, var detail, Element target) {
     var idStr = target.getAttribute('data-value');
     if (idStr!=null) {
-      _toggle(target);
+      _toggle(target.parent);
       this.fire(selectionEventName,detail:int.parse(idStr));
     }
     
   }
   
+  void select(String id){
+    var f = document.getElementById(id);
+
+    if (f==null)     // need this for js version ..
+      f = shadowRoot.getElementById(id);
+    
+    if (f!=null) 
+      _toggle(f);
+  }
+  
   void onMapSelected(Event e, var details, Element target) {
-    _toggle(target);
+    _toggle(target.parent);
     this.fire(mapSelected);
   }
   
-  void _toggle(var target) {
+  void _toggle(Element target) {
     if (_currentSelected!=null)
       _currentSelected.classes.toggle('active');
     // this is because the action is on the anchor element but the style applies to the parent div
-    _currentSelected = target.parent; 
+    _currentSelected = target; 
     _currentSelected.classes.toggle('active');
   }
   
@@ -56,6 +66,9 @@ class NavTabs extends PolymerElement {
     print('navTab enteredView');
   }
   
+  /*
+   * again hardwired .. 
+   */
   int get height {
     return 44;
   }

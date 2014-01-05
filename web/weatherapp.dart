@@ -36,6 +36,11 @@ class WeatherApp extends PolymerElement {
       
       window.on[NavTabs.selectionEventName].listen(_showSite);
 
+      window.on[GMap.markerSelectedEvent].listen((eventData) {
+        _navTab.select('${eventData.detail}');
+        _showSite(eventData);
+        });
+      
       window.on[NavTabs.mapSelected].listen(_showMap);
       
       _wchart = new Element.tag('wind-chart');
@@ -48,7 +53,7 @@ class WeatherApp extends PolymerElement {
       
       _svc=new Mford_Gae_Services()
            ..readSites().then( (resp)=>_renderSites(resp));
-        
+      _navTab.select('map');
       window.onResize.listen( (event) {
         print('width : ${window.innerWidth} height: ${window.innerHeight}');
         event.preventDefault(); // stop the event from propagating ..
@@ -59,7 +64,12 @@ class WeatherApp extends PolymerElement {
     }
   }
 
-  
+  void enteredView() {
+    super.enteredView();
+  }
+  /**
+   * renders anemometer sites 
+   */
   void _renderSites(List<Site> sites){
     _navTab.options.clear();
     for (var item in sites) {
@@ -68,7 +78,9 @@ class WeatherApp extends PolymerElement {
     }
   }
   
-  
+  /**
+   * show data for one of the sites  
+   */
   void _showSite(CustomEvent data) {
     if (_contentDiv.children.contains(_gMap)) {
       _contentDiv.children.clear();
@@ -84,7 +96,10 @@ class WeatherApp extends PolymerElement {
     if (_gMap==null) return false;
     return _contentDiv.children.contains(_gMap);
   }
-  
+
+  /**
+   * show the map
+   */
   void _showMap(CustomEvent data) {
     if (!_contentDiv.children.contains(_gMap)) {
       _contentDiv.children.clear();

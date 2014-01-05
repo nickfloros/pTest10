@@ -1,11 +1,11 @@
 <polymer-element name="nav-tabs">
   <template>
-    <div>
+    <div id="navtabs">
       <ul class="nav nav-tabs">
         <template repeat="{{item in options | enumerate}}">
-          <li><a data-value="{{item.index}}" on-click="{{onSelected}}">{{item.value}}</a></li>
+          <li id="{{item.index}}"><a data-value="{{item.index}}" on-click="{{onSelected}}">{{item.value}}</a></li>
         </template>
-        <li class="navbar-right"><a on-click="{{onMapSelected}}">Map</a></li>
+        <li id="map" class="navbar-right"><a on-click="{{onMapSelected}}">Map</a></li>
       </ul>
     </div>
   </template>

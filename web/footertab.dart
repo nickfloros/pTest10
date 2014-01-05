@@ -17,6 +17,10 @@ class FooterTab extends PolymerElement {
     super.enteredView();
   }
   
+  /*
+   * this is hardwired .. as we can getting it from dom does not 
+   * work very well due images not loaded in the shawdow dom
+   */
   int get height {
     return 52;
   }
