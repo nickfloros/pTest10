@@ -63,7 +63,7 @@ class LineChart extends PolymerElement {
     
     var options={
       'title': chartTitle,
-      'hAxis': {'title': xaxisTitle},
+      'hAxis': {'title': xaxisTitle,'format':'HK:mm'},
       'vAxis': {'title': yaxisTitle}
     };
     if (minValue!=null) {
