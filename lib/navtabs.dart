@@ -35,13 +35,9 @@ class NavTabs extends PolymerElement {
   }
   
   void select(String id){
-    var f = document.getElementById(id);
-
-    if (f==null)     // need this for js version ..
-      f = shadowRoot.getElementById(id);
-    
-    if (f!=null) 
-      _toggle(f);
+    var elem = $['navtabs'].querySelector('#li${id}');
+    if (elem!=null) 
+      _toggle(elem);
   }
   
   void onMapSelected(Event e, var details, Element target) {
