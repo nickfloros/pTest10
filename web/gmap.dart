@@ -83,7 +83,11 @@ class GMap extends PolymerElement {
                                   [_markers[key],'click',
                                    new MarkerCallback(notify,_markers.length-1).onClick]);
 
-    
+    _googleMap['event'].callMethod('addListener',
+        [_markers[key],'touchend',
+         new MarkerCallback(notify,_markers.length-1).onClick]);
+
+
   }
 
   /*

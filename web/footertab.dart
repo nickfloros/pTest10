@@ -22,7 +22,9 @@ class FooterTab extends PolymerElement {
    * work very well due images not loaded in the shawdow dom
    */
   int get height {
-    return 52;
+    if ($['footDiv']!=null)
+      return $['footDiv'].clientHeight;
+    return 50;
   }
 }
 

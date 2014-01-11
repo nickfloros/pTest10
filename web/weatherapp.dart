@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:polymer/polymer.dart';
 import 'windchart.dart';
 import 'gmap.dart';
-import 'package:pTest10/navtabs.dart';
+import 'package:pTest10/navbar.dart';
 import 'package:pTest10/mfordgae.dart';
 import 'footertab.dart';
 
@@ -15,7 +15,7 @@ class WeatherApp extends PolymerElement {
   
   bool get applyAuthorStyles => true;
   
-  NavTabs _navTab;
+  NavBar _navTab;
   var _wchart;
   var _gMap;
   FooterTab _footerTab;
@@ -34,31 +34,35 @@ class WeatherApp extends PolymerElement {
       _navTab = shadowRoot.querySelector('#navTab');
       _footerTab = shadowRoot.querySelector('#footerTab');
       
-      window.on[NavTabs.selectionEventName].listen(_showSite);
+      window.on[NavBar.selectionEventName].listen(_showSite);
 
       window.on[GMap.markerSelectedEvent].listen((eventData) {
         _navTab.select('${eventData.detail}');
         _showSite(eventData);
         });
       
-      window.on[NavTabs.mapSelected].listen(_showMap);
+      window.on[NavBar.mapSelected].listen(_showMap);
       
       _wchart = new Element.tag('wind-chart');
       
       _gMap = new Element.tag('g-map');
-      _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+
       
       _contentDiv = shadowRoot.querySelector('#content')
           ..children.add(_gMap);
       
       _svc=new Mford_Gae_Services()
            ..readSites().then( (resp)=>_renderSites(resp));
-      _navTab.select('map');
+//      _navTab.select('map');
       window.onResize.listen( (event) {
         print('width : ${window.innerWidth} height: ${window.innerHeight}');
         event.preventDefault(); // stop the event from propagating ..
+        
         if (_showingMap) {
           _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+        }
+        else {
+          _wchart.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
         }
       });
     }
@@ -66,6 +70,7 @@ class WeatherApp extends PolymerElement {
 
   void enteredView() {
     super.enteredView();
+    _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
   }
   /**
    * renders anemometer sites 
@@ -85,6 +90,7 @@ class WeatherApp extends PolymerElement {
     if (_contentDiv.children.contains(_gMap)) {
       _contentDiv.children.clear();
       _contentDiv.children.add(_wchart);
+      _wchart.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
     }
     _svc.readSite(data.detail).then( _processResponse);
   }
@@ -111,6 +117,7 @@ class WeatherApp extends PolymerElement {
 
   void _processResponse(var resp) {
    _wchart.draw(resp);
+   
   }
   
   

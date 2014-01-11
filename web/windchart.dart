@@ -21,6 +21,11 @@ class WindChart extends PolymerElement {
      window.on['drawCharts'].listen( (data) {draw(data.detail);});
     }
   }
+
+  void resize(int width, int height) {
+    $['chartDiv'].style.width='${width}px';
+    $['chartDiv'].style.height='${height}px';
+  }
   
   void draw(var resp) {
     List directionData = new List() 
