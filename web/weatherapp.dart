@@ -1,7 +1,6 @@
 import 'dart:html';
 import 'dart:async';
 import 'package:polymer/polymer.dart';
-import 'windchart.dart';
 import 'gmap.dart';
 import 'package:pTest10/navbar.dart';
 import 'package:pTest10/mfordgae.dart';
@@ -17,23 +16,34 @@ class WeatherApp extends PolymerElement {
   
   NavBar _navTab;
   var _wchart;
-  var _gMap;
+  GMap _gMap;
   FooterTab _footerTab;
   int _workAreaHeightOffset=0;
    
-  Element _contentDiv;
+  var _contentDiv;
   
   Mford_Gae_Services _svc;
   
   WeatherApp.created() : super.created() {
-    print('WeatherApp.created ${id} ${shadowRoot!=null}');
+    print('WeatherApp.created shadowRoot is ${shadowRoot!=null}');
+    _wchart = new Element.tag('wind-chart');
+//    _gMap = new Element.tag('g-map');
+  }
+  
+  void enteredView() {
+    super.enteredView();
+    print('WeatherApp.enteredView shadowRoot is ${shadowRoot!=null}');
 
-    if (shadowRoot!=null) { // there is a strange behaviour if element i
+    if (shadowRoot!=null) { // there is a strange behaviour 
       
-      // bind to navTabs component
-      _navTab = shadowRoot.querySelector('#navTab');
-      _footerTab = shadowRoot.querySelector('#footerTab');
+      _navTab = $['navTab'];
+      _footerTab = $['footerTab'];
       
+      _gMap = new Element.tag('g-map');
+      _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+      _contentDiv = $['content']
+        ..children.add(_gMap);
+
       window.on[NavBar.selectionEventName].listen(_showSite);
 
       window.on[GMap.markerSelectedEvent].listen((eventData) {
@@ -42,14 +52,8 @@ class WeatherApp extends PolymerElement {
         });
       
       window.on[NavBar.mapSelected].listen(_showMap);
-      
-      _wchart = new Element.tag('wind-chart');
-      
-      _gMap = new Element.tag('g-map');
-
-      
-      _contentDiv = shadowRoot.querySelector('#content')
-          ..children.add(_gMap);
+            
+//          ..children.add(_gMap);
       
       _svc=new Mford_Gae_Services()
            ..readSites().then( (resp)=>_renderSites(resp));
@@ -66,10 +70,6 @@ class WeatherApp extends PolymerElement {
         }
       });
     }
-  }
-
-  void enteredView() {
-    super.enteredView();
     _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
   }
   /**
@@ -92,6 +92,7 @@ class WeatherApp extends PolymerElement {
       _contentDiv.children.add(_wchart);
       _wchart.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
     }
+    _wchart.startLoading("foo");
     _svc.readSite(data.detail).then( _processResponse);
   }
 

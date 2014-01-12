@@ -1,4 +1,4 @@
-library infob;
+library footertab;
 import 'package:polymer/polymer.dart';
 
 /**

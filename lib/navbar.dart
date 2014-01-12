@@ -87,6 +87,7 @@ class NavBar extends PolymerElement {
    * again hardwired .. 
    */
   int get height {
+    
     return 50;
   }
 }

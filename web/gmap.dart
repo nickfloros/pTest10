@@ -1,3 +1,4 @@
+library gmap;
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:js' show context, JsObject, JsFunction;
@@ -5,6 +6,7 @@ import 'dart:js' show context, JsObject, JsFunction;
 @CustomTag('g-map')
 class GMap extends PolymerElement {
 
+  bool get applyAuthorStyles => true;
   /**
    * center of map latittude ..
    */
@@ -25,6 +27,12 @@ class GMap extends PolymerElement {
   Map _markers = new Map();
 
   GMap.created() : super.created() {
+    print('GMap.created : shadowRoot is null ${shadowRoot==null}');
+  }
+
+  void enteredView() {
+    super.enteredView();
+    print('GMap.enteredView : shadowRoot is null ${shadowRoot==null}');
     if (shadowRoot!=null) {
       _init();
     }
@@ -34,27 +42,34 @@ class GMap extends PolymerElement {
    * init map 
    */
   void _init() {
-    _mapCanvas = shadowRoot.querySelector('#map_canvas');
-    
-    _googleMap = context['google']['maps'];
-    var center = new JsObject(_googleMap['LatLng'], [num.parse(cLat),num.parse(cLng)]);
-
-    var mapTypeId = _googleMap['MapTypeId']['ROADMAP'];
-    mapOptions = new JsObject.jsify({
-      "center": center,
-      "zoom": 8,
-      "mapTypeId": mapTypeId
-    });
-    
-    _map = new JsObject(_googleMap['Map'], [_mapCanvas, mapOptions]);    
+    if (_mapCanvas==null) {
+      _mapCanvas = shadowRoot.querySelector('#map_canvas');
+      
+      _googleMap = context['google']['maps'];
+      var center = new JsObject(_googleMap['LatLng'], [num.parse(cLat),num.parse(cLng)]);
+  
+      var mapTypeId = _googleMap['MapTypeId']['ROADMAP'];
+      mapOptions = new JsObject.jsify({
+        "center": center,
+        "zoom": 8,
+        "mapTypeId": mapTypeId,
+        "draggable":true,
+        "scrollwheel":false,
+      });
+      
+      _map = new JsObject(_googleMap['Map'], [_mapCanvas, mapOptions]);    
+    }
   }
   
   void resize(int width, int height) {
+    if (_mapCanvas!=null) {
     _mapCanvas.style.width='${width}px';
     _mapCanvas.style.height='${height}px';
+    }
   }
   
   void show(int width,int height) {
+    this.focus(); // grap focus ..
     resize(width,height);
     new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
   }

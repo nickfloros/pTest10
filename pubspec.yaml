@@ -1,6 +1,7 @@
 name: pTest10
 description: A sample Polymer application
 dependencies:
+  intl: any
   js: any
   polymer: any
 transformers:

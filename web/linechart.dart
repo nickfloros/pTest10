@@ -1,3 +1,4 @@
+library linechart;
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';

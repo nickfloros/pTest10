@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'package:intl/intl.dart';
 import 'package:polymer/polymer.dart';
 import 'linechart.dart';
 import 'package:pTest10/mfordgae.dart';
@@ -11,23 +12,37 @@ class WindChart extends PolymerElement {
 
   bool get applyAuthorStyles => true;
   
+  @observable
+  String siteName;
+  
   LineChart _windSpeedLineChart;
   LineChart _windDirectionLineChart;
   
   WindChart.created() : super.created() {
-    if (shadowRoot!=null) {
+    print('WindChart.created : shadowRoot is ${shadowRoot==null}');
+  }
+
+  void enteredView() {
+    super.enteredView();
+    print('WindChart.enteredView : shadowRoot is ${shadowRoot==null}');
+    if (shadowRoot!=null) {      
      _windSpeedLineChart =shadowRoot.querySelector('#speedChart');
      _windDirectionLineChart =shadowRoot.querySelector('#directionChart');
      window.on['drawCharts'].listen( (data) {draw(data.detail);});
     }
   }
-
+  
   void resize(int width, int height) {
     $['chartDiv'].style.width='${width}px';
     $['chartDiv'].style.height='${height}px';
   }
   
+  void startLoading(String sitename){
+    siteName = '${sitename} ';
+  }
+  
   void draw(var resp) {
+    
     List directionData = new List() 
       ..add( new List() 
       ..add('Time')
