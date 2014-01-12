@@ -22,33 +22,19 @@ class GMap extends PolymerElement {
   var mapOptions;
   var _mapCanvas;
   var _map;
-
-  JsObject _latLngBound;
+  JsObject _center;
+  var _latLngBound;
   Map _markers = new Map();
 
   GMap.created() : super.created() {
     print('GMap.created : shadowRoot is null ${shadowRoot==null}');
-    if (_googleMap==null) {
-    _googleMap = context['google']['maps'];
-    var center = new JsObject(_googleMap['LatLng'], [num.parse(cLat),num.parse(cLng)]);
-    
-    var mapTypeId = _googleMap['MapTypeId']['ROADMAP'];
-    mapOptions = new JsObject.jsify({
-      "center": center,
-      "zoom": 8,
-      "mapTypeId": mapTypeId
-    });
-
-    _latLngBound = new JsObject(_googleMap['LatLngBounds'],[]);
-    }
+    _init();
   }
 
   void enteredView() {
     super.enteredView();
     print('GMap.enteredView : shadowRoot is null ${shadowRoot==null}');
-    if (shadowRoot!=null) {
-      _init();
-    }
+    _init();
   }
   
   /**
@@ -57,6 +43,17 @@ class GMap extends PolymerElement {
   void _init() {
     if (_mapCanvas==null) {
       _mapCanvas = shadowRoot.querySelector('#map_canvas');
+      _googleMap = context['google']['maps'];
+      _center = new JsObject(_googleMap['LatLng'], [num.parse(cLat),num.parse(cLng)]);
+     
+      var mapTypeId = _googleMap['MapTypeId']['ROADMAP'];
+      mapOptions = new JsObject.jsify({
+        "center": _center,
+        "zoom": 8,
+        "mapTypeId": mapTypeId
+      });
+
+      _latLngBound = new JsObject(_googleMap['LatLngBounds'],[]);
       _map = new JsObject(_googleMap['Map'], [_mapCanvas, mapOptions]);    
     }
   }
@@ -80,9 +77,9 @@ class GMap extends PolymerElement {
   void addMarker(String key, String desc, num lat, num lng){
     var point =  new JsObject(_googleMap['LatLng'], [lat,lng]);
     
-    if (_latLngBound==null) {
-    }
     _latLngBound.callMethod('extend',[point]);
+    
+    if(_map!=null) {
     
     var markerOptions = new JsObject.jsify({
       "position":point,
@@ -96,12 +93,9 @@ class GMap extends PolymerElement {
     _googleMap['event'].callMethod('addListener',
                                   [_markers[key],'click',
                                    new MarkerCallback(notify,_markers.length-1).onClick]);
-
-    _googleMap['event'].callMethod('addListener',
-        [_markers[key],'touchend',
-         new MarkerCallback(notify,_markers.length-1).onClick]);
-
-
+    }
+    else
+      print('Gmap.addMarker _map is null');
   }
 
   /*

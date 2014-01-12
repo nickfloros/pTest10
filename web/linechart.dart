@@ -42,21 +42,23 @@ class LineChart extends PolymerElement {
   var _chartData;
   var _lineChart;
   
+  Completer _loadCompleter;
+  
   LineChart.created() : super.created() {
-    
+    print('LineChart.created shadowRoot is null ${shadowRoot==null}');
     if (shadowRoot!=null) {
       _load().then((_) {_intChart();});
     }
   }
   
   Future _load() {
-    Completer c = new Completer();
+    _loadCompleter = new Completer();
     context["google"].callMethod('load',
        ['visualization', '1', new JsObject.jsify({
          'packages': ['corechart'],
-         'callback': new JsFunction.withThis(c.complete)
+         'callback': new JsFunction.withThis(_loadCompleter.complete)
        })]);
-    return c.future;
+    return _loadCompleter.future;
   }
 
   
