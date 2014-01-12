@@ -23,6 +23,13 @@ class NavBar extends PolymerElement {
   var _currentSelected; 
   
   NavBar.created() : super.created() {
+    print('NavBar.created : shadowRoot is null ${shadowRoot==null}');
+  }
+  
+  void enteredView() {
+    super.enteredView();
+    print('NavBar.enteredView : shadowRoot is null ${shadowRoot==null}');
+    
   }
 
   void _toggleNavBar() {
@@ -77,18 +84,14 @@ class NavBar extends PolymerElement {
   void setSites(var sites){
     options.addAll(sites);
   }
-  
-  void enteredView() {
-    super.enteredView();
-    print('navTab enteredView');
-  }
-  
+    
   /*
    * again hardwired .. 
    */
   int get height {
-    
+    if ($['footDiv']!=null)
+      return $['headerDiv'].clientHeight;  
     return 50;
-  }
+    }
 }
 

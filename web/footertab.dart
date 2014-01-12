@@ -10,12 +10,14 @@ class FooterTab extends PolymerElement {
   bool get applyAuthorStyles => true;
 
   FooterTab.created() : super.created() {
+    print('footerTab.created : shadowRoot is null ${shadowRoot==null}');
   }
 
   
   void enteredView() {
     super.enteredView();
-  }
+    print('footerTab.enteredView : shadowRoot is null ${shadowRoot==null}');
+   }
   
   /*
    * this is hardwired .. as we can getting it from dom does not 

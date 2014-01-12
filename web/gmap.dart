@@ -28,6 +28,19 @@ class GMap extends PolymerElement {
 
   GMap.created() : super.created() {
     print('GMap.created : shadowRoot is null ${shadowRoot==null}');
+    if (_googleMap==null) {
+    _googleMap = context['google']['maps'];
+    var center = new JsObject(_googleMap['LatLng'], [num.parse(cLat),num.parse(cLng)]);
+    
+    var mapTypeId = _googleMap['MapTypeId']['ROADMAP'];
+    mapOptions = new JsObject.jsify({
+      "center": center,
+      "zoom": 8,
+      "mapTypeId": mapTypeId
+    });
+
+    _latLngBound = new JsObject(_googleMap['LatLngBounds'],[]);
+    }
   }
 
   void enteredView() {
@@ -44,24 +57,11 @@ class GMap extends PolymerElement {
   void _init() {
     if (_mapCanvas==null) {
       _mapCanvas = shadowRoot.querySelector('#map_canvas');
-      
-      _googleMap = context['google']['maps'];
-      var center = new JsObject(_googleMap['LatLng'], [num.parse(cLat),num.parse(cLng)]);
-  
-      var mapTypeId = _googleMap['MapTypeId']['ROADMAP'];
-      mapOptions = new JsObject.jsify({
-        "center": center,
-        "zoom": 8,
-        "mapTypeId": mapTypeId,
-        "draggable":true,
-        "scrollwheel":false,
-      });
-      
       _map = new JsObject(_googleMap['Map'], [_mapCanvas, mapOptions]);    
     }
   }
   
-  void resize(int width, int height) {
+  void _resize(int width, int height) {
     if (_mapCanvas!=null) {
     _mapCanvas.style.width='${width}px';
     _mapCanvas.style.height='${height}px';
@@ -70,7 +70,7 @@ class GMap extends PolymerElement {
   
   void show(int width,int height) {
     this.focus(); // grap focus ..
-    resize(width,height);
+    _resize(width,height);
     new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
   }
   
@@ -81,7 +81,6 @@ class GMap extends PolymerElement {
     var point =  new JsObject(_googleMap['LatLng'], [lat,lng]);
     
     if (_latLngBound==null) {
-      _latLngBound = new JsObject(_googleMap['LatLngBounds'],[]);
     }
     _latLngBound.callMethod('extend',[point]);
     

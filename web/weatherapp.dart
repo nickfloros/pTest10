@@ -38,8 +38,7 @@ class WeatherApp extends PolymerElement {
       
       _navTab = $['navTab'];
       _footerTab = $['footerTab'];
-      
-      _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+
       _contentDiv = $['content']
         ..children.add(_gMap);
 
@@ -51,9 +50,7 @@ class WeatherApp extends PolymerElement {
         });
       
       window.on[NavBar.mapSelected].listen(_showMap);
-            
-//          ..children.add(_gMap);
-      
+                  
       _svc=new Mford_Gae_Services()
            ..readSites().then( (resp)=>_renderSites(resp));
 //      _navTab.select('map');
@@ -62,14 +59,15 @@ class WeatherApp extends PolymerElement {
         event.preventDefault(); // stop the event from propagating ..
         
         if (_showingMap) {
-          _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+          _gMap.show(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
         }
         else {
           _wchart.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
         }
       });
+      _gMap.show(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
     }
-    _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+
   }
   /**
    * renders anemometer sites 
@@ -80,7 +78,7 @@ class WeatherApp extends PolymerElement {
       _navTab.options.add(item.stationName);
       _gMap.addMarker(item.stationCode,item.stationName, item.latitude, item.longitude);
     }
-    _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+    _gMap.show(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
   }
   
   /**
