@@ -19,12 +19,12 @@ class WindChart extends PolymerElement {
   LineChart _windDirectionLineChart;
   
   WindChart.created() : super.created() {
-    print('WindChart.created : shadowRoot is ${shadowRoot==null}');
+    print('WindChart.created : shadowRoot is null ${shadowRoot==null}');
   }
 
   void enteredView() {
     super.enteredView();
-    print('WindChart.enteredView : shadowRoot is ${shadowRoot==null}');
+    print('WindChart.enteredView : shadowRoot is null ${shadowRoot==null}');
     if (shadowRoot!=null) {      
      _windSpeedLineChart =shadowRoot.querySelector('#speedChart');
      _windDirectionLineChart =shadowRoot.querySelector('#directionChart');

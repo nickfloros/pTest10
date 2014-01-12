@@ -25,21 +25,20 @@ class WeatherApp extends PolymerElement {
   Mford_Gae_Services _svc;
   
   WeatherApp.created() : super.created() {
-    print('WeatherApp.created shadowRoot is ${shadowRoot!=null}');
+    print('WeatherApp.created shadowRoot is null ${shadowRoot!=null}');
     _wchart = new Element.tag('wind-chart');
-//    _gMap = new Element.tag('g-map');
+    _gMap = new Element.tag('g-map');
   }
   
   void enteredView() {
     super.enteredView();
-    print('WeatherApp.enteredView shadowRoot is ${shadowRoot!=null}');
+    print('WeatherApp.enteredView shadowRoot is null ${shadowRoot!=null}');
 
     if (shadowRoot!=null) { // there is a strange behaviour 
       
       _navTab = $['navTab'];
       _footerTab = $['footerTab'];
       
-      _gMap = new Element.tag('g-map');
       _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
       _contentDiv = $['content']
         ..children.add(_gMap);
@@ -81,6 +80,7 @@ class WeatherApp extends PolymerElement {
       _navTab.options.add(item.stationName);
       _gMap.addMarker(item.stationCode,item.stationName, item.latitude, item.longitude);
     }
+    _gMap.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
   }
   
   /**
