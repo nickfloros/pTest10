@@ -20,11 +20,15 @@ packages:
   collection:
     description: collection
     source: hosted
-    version: "0.9.0"
+    version: "0.9.1"
   custom_element:
     description: custom_element
     source: hosted
     version: "0.9.1+2"
+  google_maps:
+    description: google_maps
+    source: hosted
+    version: "2.0.3"
   html5lib:
     description: html5lib
     source: hosted
@@ -41,6 +45,10 @@ packages:
     description: js
     source: hosted
     version: "0.2.1"
+  js_wrapping:
+    description: js_wrapping
+    source: hosted
+    version: "0.1.0"
   logging:
     description: logging
     source: hosted

@@ -14,7 +14,7 @@ class Mford_Gae_Services {
   
   Future<List<Site>> readSites() {
     Completer comp = new Completer<List<Site>>();
-    HttpRequest.getString('${_url}/sites')
+    HttpRequest.getString('$_url/sites')
       .then((result) { 
         comp.complete(_parseSites(result));
         })
@@ -52,7 +52,7 @@ class Mford_Gae_Services {
     
     Completer comp = new Completer<List<AnemometerReading>>();
     
-    HttpRequest.getString('${_url}/report?site=${sites[id].stationCode}')
+    HttpRequest.getString('$_url/report?site=${sites[id].stationCode}')
       .then((result) { 
         var map = JSON.decode(result);
         List<AnemometerReading> list = new List<AnemometerReading>();

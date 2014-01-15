@@ -1,7 +1,7 @@
 import 'dart:html';
 import 'dart:async';
 import 'package:polymer/polymer.dart';
-import 'gmap.dart';
+import 'jsgmap.dart';
 import 'package:pTest10/navbar.dart';
 import 'package:pTest10/mfordgae.dart';
 import 'footertab.dart';
@@ -16,10 +16,9 @@ class WeatherApp extends PolymerElement {
   
   NavBar _navTab;
   var _wchart;
-  GMap _gMap;
+  JsGMap _gMap;
   FooterTab _footerTab;
   int _workAreaHeightOffset=0;
-   
   var _contentDiv;
   
   Mford_Gae_Services _svc;
@@ -27,13 +26,14 @@ class WeatherApp extends PolymerElement {
   WeatherApp.created() : super.created() {
     print('WeatherApp.created shadowRoot is null ${shadowRoot!=null}');
     _wchart = new Element.tag('wind-chart');
-    _gMap = new Element.tag('g-map');
+    _gMap = new Element.tag('jsg-map');
+   
   }
   
   void enteredView() {
     super.enteredView();
     print('WeatherApp.enteredView shadowRoot is null ${shadowRoot!=null}');
-
+    
     if (shadowRoot!=null) { // there is a strange behaviour 
       
       _navTab = $['navTab'];
@@ -42,14 +42,14 @@ class WeatherApp extends PolymerElement {
       _contentDiv = $['content']
         ..children.add(_gMap);
 
-      window.on[NavBar.selectionEventName].listen(_showSite);
+      on[NavBar.selectionEventName].listen(_showSite);
 
-      window.on[GMap.markerSelectedEvent].listen((eventData) {
+      on[JsGMap.markerSelectedEvent].listen((eventData) {
         _navTab.select('${eventData.detail}');
         _showSite(eventData);
         });
       
-      window.on[NavBar.mapSelected].listen(_showMap);
+      on[NavBar.mapSelected].listen(_showMap);
                   
       _svc=new Mford_Gae_Services()
            ..readSites().then( (resp)=>_renderSites(resp));
@@ -91,6 +91,9 @@ class WeatherApp extends PolymerElement {
       _wchart.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
     }
     _wchart.startLoading("foo");
+    var body = window.document.getElementById('mainApp');
+    body.parent.classes.toggle('model-open',true);
+
     _svc.readSite(data.detail).then( _processResponse);
   }
 
@@ -116,7 +119,6 @@ class WeatherApp extends PolymerElement {
 
   void _processResponse(var resp) {
    _wchart.draw(resp);
-   
   }
   
   

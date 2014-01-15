@@ -1,10 +1,10 @@
-library gmap;
+library jsgmap;
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:js' show context, JsObject, JsFunction;
 
-@CustomTag('g-map')
-class GMap extends PolymerElement {
+@CustomTag('jsg-map')
+class JsGMap extends PolymerElement {
 
   bool get applyAuthorStyles => true;
   /**
@@ -26,7 +26,7 @@ class GMap extends PolymerElement {
   var _latLngBound;
   Map _markers = new Map();
 
-  GMap.created() : super.created() {
+  JsGMap.created() : super.created() {
     print('GMap.created : shadowRoot is null ${shadowRoot==null}');
     _init();
   }
@@ -69,25 +69,26 @@ class GMap extends PolymerElement {
     this.focus(); // grap focus ..
     _resize(width,height);
     new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
+    _map.callMethod('fitBounds',[_latLngBound]);    
   }
   
   /**
    * add a marker 
    */
   void addMarker(String key, String desc, num lat, num lng){
-    var point =  new JsObject(_googleMap['LatLng'], [lat,lng]);
     
-    _latLngBound.callMethod('extend',[point]);
+    
+    _latLngBound.callMethod('extend',[new JsObject(_googleMap['LatLng'], [lat,lng])]);
     
     if(_map!=null) {
     
     var markerOptions = new JsObject.jsify({
-      "position":point,
+      "position":new JsObject(_googleMap['LatLng'], [lat,lng]),
       "map":_map,
       "title": desc
     });
     
-    _map.callMethod('fitBounds',[_latLngBound]);
+    
 
     _markers[key] = new JsObject(_googleMap['Marker'],[markerOptions]);
     _googleMap['event'].callMethod('addListener',
@@ -102,7 +103,7 @@ class GMap extends PolymerElement {
    * fire event identifying that an marker was selected
    */
   void notify(int markerId){
-    this.fire(GMap.markerSelectedEvent,detail:markerId);
+    this.fire(JsGMap.markerSelectedEvent,detail:markerId);
   }
   
 }
