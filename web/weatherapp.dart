@@ -5,6 +5,7 @@ import 'jsgmap.dart';
 import 'package:pTest10/navbar.dart';
 import 'package:pTest10/mfordgae.dart';
 import 'footertab.dart';
+import 'windchart.dart';
 
 /**
  * A Polymer click counter element.
@@ -15,7 +16,7 @@ class WeatherApp extends PolymerElement {
   bool get applyAuthorStyles => true;
   
   NavBar _navTab;
-  var _wchart;
+  WindChart _wchart;
   JsGMap _gMap;
   FooterTab _footerTab;
   int _workAreaHeightOffset=0;
@@ -42,11 +43,13 @@ class WeatherApp extends PolymerElement {
       _contentDiv = $['content']
         ..children.add(_gMap);
 
-      on[NavBar.selectionEventName].listen(_showSite);
+      on[NavBar.selectionEventName].listen( (eventData) {
+        _showSite(_svc.sites[eventData.detail]);
+      });
 
       on[JsGMap.markerSelectedEvent].listen((eventData) {
         _navTab.select('${eventData.detail}');
-        _showSite(eventData);
+        _showSite(_svc.sites[eventData.detail]);
         });
       
       on[NavBar.mapSelected].listen(_showMap);
@@ -69,6 +72,7 @@ class WeatherApp extends PolymerElement {
     }
 
   }
+  
   /**
    * renders anemometer sites 
    */
@@ -84,17 +88,16 @@ class WeatherApp extends PolymerElement {
   /**
    * show data for one of the sites  
    */
-  void _showSite(CustomEvent data) {
+  void _showSite(Site data) {
     if (_contentDiv.children.contains(_gMap)) {
       _contentDiv.children.clear();
       _contentDiv.children.add(_wchart);
-      _wchart.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
     }
-    _wchart.startLoading("foo");
-    var body = window.document.getElementById('mainApp');
-    body.parent.classes.toggle('model-open',true);
 
-    _svc.readSite(data.detail).then( _processResponse);
+      _wchart.loading(data.stationName);
+    _svc.readSite(data.id).then( _processResponse);
+    _wchart.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+   // _wchart.showBar(data.stationName);    
   }
 
   /*

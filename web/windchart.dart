@@ -1,8 +1,9 @@
 import 'dart:html';
-import 'package:intl/intl.dart';
+
 import 'package:polymer/polymer.dart';
 import 'linechart.dart';
 import 'package:pTest10/mfordgae.dart';
+import 'package:pTest10/modalloading.dart';
 
 /**
  * A Polymer click counter element.
@@ -17,7 +18,7 @@ class WindChart extends PolymerElement {
   
   LineChart _windSpeedLineChart;
   LineChart _windDirectionLineChart;
-  
+  ModalLoading _progressBar;
   WindChart.created() : super.created() {
     print('WindChart.created : shadowRoot is null ${shadowRoot==null}');
   }
@@ -26,8 +27,11 @@ class WindChart extends PolymerElement {
     super.enteredView();
     print('WindChart.enteredView : shadowRoot is null ${shadowRoot==null}');
     if (shadowRoot!=null) {      
-     _windSpeedLineChart =shadowRoot.querySelector('#speedChart');
-     _windDirectionLineChart =shadowRoot.querySelector('#directionChart');
+     _windSpeedLineChart =$['speedChart'];
+     _windDirectionLineChart =$['directionChart'];
+     _progressBar = $['modalLoading'];
+     // look for component rather than id ... 
+     // _progressBar = this.shadowRoot.getElementsByTagName('yab-progress-bar').first;
      window.on['drawCharts'].listen( (data) {draw(data.detail);});
     }
   }
@@ -37,8 +41,10 @@ class WindChart extends PolymerElement {
     $['chartDiv'].style.height='${height}px';
   }
   
-  void startLoading(String sitename){
-    siteName = '${sitename} ';
+  void loading(String name) {
+    print('Loading - $name');
+    siteName = name;
+    _progressBar.show();
   }
   
   void draw(var resp) {
@@ -65,6 +71,6 @@ class WindChart extends PolymerElement {
     }
     _windSpeedLineChart.draw(speedData);
     _windDirectionLineChart.draw(directionData);
-
+    _progressBar.hide(); 
   }
 }

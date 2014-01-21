@@ -1,0 +1,32 @@
+<polymer-element name="modal-loading" >
+  <template>
+    <style>
+    </style>
+      
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">    
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" on-click="{{onClose}}" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Loading -  <content></content></h4>
+          </div>
+          <div class="modal-body">
+              
+             <hr>
+              
+          <div class="progress progress-striped active">
+            <div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+              <span class="sr-only">In progress</span>
+            </div>
+          </div>
+          </div>
+
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+
+    </div>    
+  </template>
+  <script type="application/dart" src="modalloading.dart"></script>
+</polymer-element>
+

@@ -45,6 +45,7 @@ class NavBar extends PolymerElement {
       _toggle(target.parent);      
       _toggleNavBar();
       _navBarActive=null;
+      
       this.fire(selectionEventName,detail:int.parse(idStr));
     }
     

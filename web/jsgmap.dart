@@ -28,7 +28,6 @@ class JsGMap extends PolymerElement {
 
   JsGMap.created() : super.created() {
     print('GMap.created : shadowRoot is null ${shadowRoot==null}');
-    _init();
   }
 
   void enteredView() {
@@ -88,12 +87,10 @@ class JsGMap extends PolymerElement {
       "title": desc
     });
     
-    
-
     _markers[key] = new JsObject(_googleMap['Marker'],[markerOptions]);
     _googleMap['event'].callMethod('addListener',
                                   [_markers[key],'click',
-                                   new MarkerCallback(notify,_markers.length-1).onClick]);
+                                   new MarkerCallback(notify, desc, _markers.length-1).onClick]);
     }
     else
       print('Gmap.addMarker _map is null');
@@ -102,8 +99,8 @@ class JsGMap extends PolymerElement {
   /*
    * fire event identifying that an marker was selected
    */
-  void notify(int markerId){
-    this.fire(JsGMap.markerSelectedEvent,detail:markerId);
+  void notify(int ref){
+    this.fire(JsGMap.markerSelectedEvent,detail:ref);
   }
   
 }
@@ -113,17 +110,17 @@ class JsGMap extends PolymerElement {
  */
 class MarkerCallback {
   int ref;
-  var _callBack;
-  MarkerCallback(Function win,int k) {
-    _callBack = win;
-    ref=k;
-  }
+  Function _callBack;
+  String desc;
+
+  MarkerCallback(this._callBack, this.desc, this.ref) ;
   
   /*
    * call back from JS universe
    */
   void onClick(var misc) {
     print('selected ${ref}');
+    
     _callBack(ref);
   }
 }

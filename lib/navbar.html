@@ -20,9 +20,11 @@
         <nav id="navContent" class="collapse navbar-collapse bs-navbar-collapse" style=""
           role="navigation">
           <ul class="nav navbar-nav">
+            <template if="{{options!=null}}">
              <template repeat="{{item in options | enumerate}}">
                 <li id="li{{item.index}}"><a data-value="{{item.index}}" on-click="{{onSelected}}">{{item.value}}</a></li>
             </template>        
+            </template>
             <li id="limap" class="navbar-right"><a on-click="{{onMapSelected}}">Map</a></li>
           </ul>
         </nav>
