@@ -9,7 +9,7 @@ import 'package:polymer/polymer.dart';
 class ModalLoading extends PolymerElement {
  
   bool applyAuthorStyles = true;
-  
+  @published String titleText="";
   @published bool fadeBackdrop=true;
   DivElement _modalBackdrop ;
   
@@ -22,12 +22,18 @@ class ModalLoading extends PolymerElement {
     super.enteredView();
   }
   
-  void show() {
+  void show({String titleTxt: null}) {
+    
     $['myModal'].hidden=false;
     $['myModal'].classes.toggle('in');
     $['myModal'].attributes['aria-hidden']='true';
     $['myModal'].style.display='block';
-  
+
+    if (titleTxt!=null) {
+      titleText = titleTxt;
+      print('modal.show : $titleText');
+      $['myModalLabel'].text=titleText;
+    }
     if (fadeBackdrop)
       ownerDocument.documentElement.children.add(_modalBackdrop);
   }

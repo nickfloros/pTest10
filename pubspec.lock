@@ -28,7 +28,7 @@ packages:
   google_maps:
     description: google_maps
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   html5lib:
     description: html5lib
     source: hosted

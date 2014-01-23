@@ -28,7 +28,6 @@ class WeatherApp extends PolymerElement {
     print('WeatherApp.created shadowRoot is null ${shadowRoot!=null}');
     _wchart = new Element.tag('wind-chart');
     _gMap = new Element.tag('jsg-map');
-   
   }
   
   void enteredView() {
@@ -47,7 +46,7 @@ class WeatherApp extends PolymerElement {
         _showSite(_svc.sites[eventData.detail]);
       });
 
-      on[JsGMap.markerSelectedEvent].listen((eventData) {
+      on[JsGMap.MARKER_SELECTED_EVENT].listen((eventData) {
         _navTab.select('${eventData.detail}');
         _showSite(_svc.sites[eventData.detail]);
         });
@@ -94,9 +93,10 @@ class WeatherApp extends PolymerElement {
       _contentDiv.children.add(_wchart);
     }
 
-      _wchart.loading(data.stationName);
+     _wchart.loading(data.stationName);
     _svc.readSite(data.id).then( _processResponse);
     _wchart.resize(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
+    _wchart.siteName = data.stationName;
    // _wchart.showBar(data.stationName);    
   }
 
@@ -116,7 +116,6 @@ class WeatherApp extends PolymerElement {
       _contentDiv.children.clear();
       _contentDiv.children.add(_gMap);     
       _gMap.show(window.innerWidth,window.innerHeight-(_navTab.height + _footerTab.height));
-      
     }
   }
 
@@ -126,4 +125,3 @@ class WeatherApp extends PolymerElement {
   
   
 }
-

@@ -13,8 +13,7 @@ class WindChart extends PolymerElement {
 
   bool get applyAuthorStyles => true;
   
-  @observable
-  String siteName;
+  @observable String siteName='';
   
   LineChart _windSpeedLineChart;
   LineChart _windDirectionLineChart;
@@ -44,7 +43,8 @@ class WindChart extends PolymerElement {
   void loading(String name) {
     print('Loading - $name');
     siteName = name;
-    _progressBar.show();
+    $['siteName'].text=name;
+    _progressBar.show(titleTxt:name);
   }
   
   void draw(var resp) {

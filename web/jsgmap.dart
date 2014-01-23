@@ -16,7 +16,8 @@ class JsGMap extends PolymerElement {
    */
   @published String cLng='-1.2';
 
-  static final String markerSelectedEvent = "markerSelected";
+  static const String MARKER_SELECTED_EVENT = "markerSelected";
+  static const String ADD_MARKER = "addMarker";
   
   var _googleMap;
   var mapOptions;
@@ -34,8 +35,13 @@ class JsGMap extends PolymerElement {
     super.enteredView();
     print('GMap.enteredView : shadowRoot is null ${shadowRoot==null}');
     _init();
+    
   }
   
+  void leftView() {
+    super.leftView();
+    
+  }
   /**
    * init map 
    */
@@ -65,10 +71,10 @@ class JsGMap extends PolymerElement {
   }
   
   void show(int width,int height) {
-    this.focus(); // grap focus ..
     _resize(width,height);
     new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
-    _map.callMethod('fitBounds',[_latLngBound]);    
+    if (_markers.length>0)
+      _map.callMethod('fitBounds',[_latLngBound]);    
   }
   
   /**
@@ -100,7 +106,7 @@ class JsGMap extends PolymerElement {
    * fire event identifying that an marker was selected
    */
   void notify(int ref){
-    this.fire(JsGMap.markerSelectedEvent,detail:ref);
+    this.fire(JsGMap.MARKER_SELECTED_EVENT,detail:ref);
   }
   
 }
